@@ -38,8 +38,8 @@ Item {
   readonly property bool showPasswordCursor: inputEnabled && !authenticatingPassword && failureMessage.length === 0
   readonly property bool errorState: failureMessage.length > 0
   readonly property var inputBorderSpec: errorState
-    ? Border.surfaceSpec("lock", "border-error", Color.lock.borderError, root.outlineThickness, "border-alpha")
-    : Border.surfaceSpec("lock", "border-active", Color.lock.borderActive, root.outlineThickness, "border-alpha")
+    ? Border.surfaceSpec("lock", "border-error", ShellColor.lock.borderError, root.outlineThickness, "border-alpha")
+    : Border.surfaceSpec("lock", "border-active", ShellColor.lock.borderActive, root.outlineThickness, "border-alpha")
 
   // First player with a loaded track, regardless of play state — a paused
   // song is still "what's on".
@@ -57,6 +57,7 @@ Item {
     return spotify
   }
   readonly property string userName: Quickshell.env("USER") || Quickshell.env("LOGNAME") || ""
+  readonly property bool backgroundIsVideo: /\.(mp4|webm|mov|mkv)$/i.test(backgroundPath)
   readonly property var sink: Pipewire.defaultAudioSink
   readonly property bool outputMuted: sink && sink.audio ? sink.audio.muted : false
   readonly property real outputVolume: sink && sink.audio ? sink.audio.volume : 0
@@ -125,7 +126,7 @@ Item {
 
   Rectangle {
     anchors.fill: parent
-    color: Color.background
+    color: ShellColor.background
 
     Image {
       id: wallpaper
@@ -162,6 +163,7 @@ Item {
     }
 
     Column {
+      id: clockColumn
       anchors.bottom: inputField.top
       anchors.horizontalCenter: parent.horizontalCenter
       anchors.bottomMargin: Style.space(24)
@@ -174,7 +176,7 @@ Item {
 
         Text {
           text: "󰀄"
-          color: Color.lock.placeholder
+          color: ShellColor.lock.placeholder
           font.family: Style.font.family
           font.pixelSize: Math.round(Style.font.heading * 1.1)
           verticalAlignment: Text.AlignVCenter
@@ -182,7 +184,7 @@ Item {
 
         Text {
           text: root.userName
-          color: Color.lock.placeholder
+          color: ShellColor.lock.placeholder
           font.family: Style.font.family
           font.pixelSize: Math.round(Style.font.heading * 1.1)
           verticalAlignment: Text.AlignVCenter
@@ -192,7 +194,7 @@ Item {
       Text {
         anchors.horizontalCenter: parent.horizontalCenter
         text: Qt.formatDateTime(clock.date, "HH:mm")
-        color: Color.lock.text
+        color: ShellColor.lock.text
         font.family: Style.font.family
         font.pixelSize: Math.round(Style.font.heading * 3)
         font.weight: Font.Bold
@@ -201,7 +203,7 @@ Item {
       Text {
         anchors.horizontalCenter: parent.horizontalCenter
         text: Qt.formatDateTime(clock.date, "dddd, d 'de' MMMM")
-        color: Color.lock.placeholder
+        color: ShellColor.lock.placeholder
         font.family: Style.font.family
         font.pixelSize: Math.round(Style.font.heading * 1.25)
       }
@@ -221,7 +223,7 @@ Item {
 
         Text {
           text: "󰎈"
-          color: Color.lock.placeholder
+          color: ShellColor.lock.placeholder
           font.family: Style.font.family
           font.pixelSize: Math.round(Style.font.heading * 1.1)
           verticalAlignment: Text.AlignVCenter
@@ -231,7 +233,7 @@ Item {
           text: root.activePlayer
             ? (root.activePlayer.trackTitle + (root.activePlayer.trackArtist ? " — " + root.activePlayer.trackArtist : "") + (root.activePlayer.identity ? " · " + root.activePlayer.identity : ""))
             : ""
-          color: Color.lock.placeholder
+          color: ShellColor.lock.placeholder
           font.family: Style.font.family
           font.pixelSize: Math.round(Style.font.heading * 1.0)
           verticalAlignment: Text.AlignVCenter
@@ -246,7 +248,7 @@ Item {
 
         Text {
           text: "󰒮"
-          color: Color.lock.text
+          color: ShellColor.lock.text
           font.family: Style.font.family
           font.pixelSize: Math.round(Style.font.heading * 1.4)
           visible: root.activePlayer && root.activePlayer.canGoPrevious
@@ -258,7 +260,7 @@ Item {
 
         Text {
           text: root.activePlayer && root.activePlayer.isPlaying ? "󰏤" : "󰐊"
-          color: Color.lock.text
+          color: ShellColor.lock.text
           font.family: Style.font.family
           font.pixelSize: Math.round(Style.font.heading * 1.4)
           MouseArea {
@@ -269,7 +271,7 @@ Item {
 
         Text {
           text: "󰒭"
-          color: Color.lock.text
+          color: ShellColor.lock.text
           font.family: Style.font.family
           font.pixelSize: Math.round(Style.font.heading * 1.4)
           visible: root.activePlayer && root.activePlayer.canGoNext
@@ -290,7 +292,7 @@ Item {
 
       Text {
         text: root.volumeIcon()
-        color: Color.lock.text
+        color: ShellColor.lock.text
         font.family: Style.font.family
         font.pixelSize: Math.round(Style.font.heading * 1.4)
         verticalAlignment: Text.AlignVCenter
@@ -314,12 +316,27 @@ Item {
       }
     }
 
+    AnimatedImage {
+      id: sideAnim
+      source: Qt.resolvedUrl("omarchy2.webp")
+      anchors.bottom: clockColumn.top
+      anchors.bottomMargin: Style.space(16)
+      anchors.horizontalCenter: parent.horizontalCenter
+      width: Style.space(240)
+      height: width * 226 / 400
+      fillMode: Image.PreserveAspectCrop
+      asynchronous: true
+      cache: false
+      playing: true
+      smooth: true
+    }
+
     BorderSurface {
       id: inputField
       width: root.fieldWidth
       height: root.fieldHeight
       anchors.centerIn: parent
-      color: Color.lock.background
+      color: ShellColor.lock.background
       borderSpec: root.inputBorderSpec
       radius: Style.cornerRadius
       clip: true
@@ -342,16 +359,16 @@ Item {
         echoMode: TextInput.Password
         passwordCharacter: "\u25CF"
         passwordMaskDelay: 0
-        color: Color.lock.text
-        selectionColor: Color.lock.selection
-        selectedTextColor: Color.lock.text
+        color: ShellColor.lock.text
+        selectionColor: ShellColor.lock.selection
+        selectedTextColor: ShellColor.lock.text
         font.family: Style.font.family
         font.pixelSize: text.length > 0 ? Math.max(1, Math.floor(root.passwordDotFontSize * root.passwordDotScale)) : root.fieldFontSize
         font.letterSpacing: text.length > 0 ? root.passwordDotLetterSpacing * root.passwordDotScale : 0
         cursorVisible: activeFocus && root.showPasswordCursor && text.length > 0
         cursorDelegate: Rectangle {
           width: 2
-          color: Color.lock.text
+          color: ShellColor.lock.text
           visible: passwordInput.cursorVisible
         }
 
@@ -382,7 +399,7 @@ Item {
         anchors.fill: passwordInput
         text: root.authenticatingPassword ? "Checking…" : (root.failureMessage.length > 0 ? root.failureMessage : root.placeholderText)
         visible: passwordInput.text.length === 0
-        color: root.authenticatingPassword ? Color.lock.text : (root.failureMessage.length > 0 ? Color.lock.textError : Color.lock.placeholder)
+        color: root.authenticatingPassword ? ShellColor.lock.text : (root.failureMessage.length > 0 ? ShellColor.lock.textError : ShellColor.lock.placeholder)
         font.family: Style.font.family
         font.pixelSize: root.fieldFontSize
         font.italic: !root.authenticatingPassword && root.failureMessage.length > 0
@@ -402,7 +419,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         visible: root.fingerprintConfigured
         text: "󰈷"
-        color: Color.lock.placeholder
+        color: ShellColor.lock.placeholder
         font.family: Style.font.family
         font.pixelSize: Math.round(root.fieldFontSize * 1.1)
         horizontalAlignment: Text.AlignHCenter
