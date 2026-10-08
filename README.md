@@ -40,17 +40,12 @@ ever change the id, update the matching `"id"` entry in
 `~/.config/omarchy/shell.json` (`plugins`), or the service silently
 disappears.
 
-If you would rather look at the code first, clone it yourself and validate it:
-
-    git clone https://github.com/archlatam/omaarch.lock \
-      ~/.config/omarchy/plugins/io.github.archlatam.lock
-
 ## Update
 
     omarchy plugin update io.github.archlatam.lock
 
 No `omarchy restart shell` needed here: the shell watches plugin directories
-and reloads a changed one by itself. That covers *edits* to a plugin that is
+and reloads a changed one by itself. That covers _edits_ to a plugin that is
 already loaded. A plugin installed for the first time does need a restart,
 because neither `add` nor `enable` restarts the shell themselves.
 
