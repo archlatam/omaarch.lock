@@ -5,6 +5,9 @@
   "version": "1.0.0",
   "author": "archlatam",
   "license": "MIT",
+  "omarchy": {
+    "clonedFrom": "omarchy.lock"
+  },
   "description": "Lock screen with clock, current music (MPRIS), volume control and separate password and fingerprint PAM flows",
   "kinds": [
     "service"

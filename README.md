@@ -30,10 +30,15 @@ playing media (Spotify-first, anything with MPRIS), and a volume slider.
     omarchy restart shell
 
 `--enable` does not restart the shell; until the restart the plugin is
-installed but not active. Omarchy names the install directory after the plugin
-id: `~/.config/omarchy/plugins/io.github.archlatam.lock/`. If you ever change
-the id, update the matching `"id"` entry in `~/.config/omarchy/shell.json`
-(`plugins`), or the service silently disappears.
+installed but not active. Enabling the plugin automatically disables Omarchy's
+built-in lock (`omarchy.lock`) — the manifest declares
+`"omarchy": {"clonedFrom": "omarchy.lock"}`, so `omarchy plugin enable` adds it
+to `disabledPlugins[]` in `shell.json` for you. Disabling or removing this
+plugin restores the built-in lock. Omarchy names the install directory after
+the plugin id: `~/.config/omarchy/plugins/io.github.archlatam.lock/`. If you
+ever change the id, update the matching `"id"` entry in
+`~/.config/omarchy/shell.json` (`plugins`), or the service silently
+disappears.
 
 If you would rather look at the code first, clone it yourself and validate it:
 
