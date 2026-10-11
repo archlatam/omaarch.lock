@@ -4,7 +4,9 @@ A lock screen for the Omarchy shell built on Quickshell's session lock: separate
 password and fingerprint PAM flows, blurred wallpaper, wall clock, currently
 playing media (Spotify-first, anything with MPRIS), and a volume slider.
 
-![Preview](preview.png)
+https://github.com/archlatam/omaarch.lock/raw/main/archlatam.lock.mp4
+
+<video src="archlatam.lock.mp4" controls muted loop></video>
 
 ## Features
 
