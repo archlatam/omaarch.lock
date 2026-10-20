@@ -311,7 +311,7 @@ Item {
 
     MouseArea {
       anchors.fill: parent
-      acceptedButtons: Qt.RightButton
+      acceptedButtons: Qt.LeftButton | Qt.RightButton
       onClicked: root.previewVisible = false
     }
   }
@@ -413,8 +413,7 @@ Item {
 
   Timer {
     id: idleBlankTimer
-    // Keep the unlock screen visible for the whole lock: never blank.
-    interval: 86400000
+    interval: 5000
     repeat: false
     property double armedAt: 0
     onTriggered: {
