@@ -4,9 +4,17 @@ import Quickshell.Io
 import Quickshell.Services.Pam
 import Quickshell.Wayland
 import qs.Commons
+// Qt 6.12 gives QtQuick a `Color` value type of its own, so the theme is read
+// through the module alias and never by its bare name.
+import qs.Commons as Commons
 
 Item {
   id: root
+
+  // Either name of Omarchy's theme singleton: `Color` in every shell shipped so
+  // far, `ShellColor` where a rename has landed. A name the shell lacks reads as
+  // undefined, so naming one alone draws the lock surface without its colour.
+  readonly property var theme: Commons.ShellColor || Commons.Color
 
   property var shell: null
   property string omarchyPath: ""
@@ -263,7 +271,7 @@ Item {
 
     WlSessionLockSurface {
       id: lockSurface
-      color: ShellColor.background
+      color: theme.background
 
       LockView {
         id: lockView
